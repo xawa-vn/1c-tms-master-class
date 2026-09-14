@@ -9,6 +9,7 @@ import {
   CheckIcon,
   ClockIcon,
   CloseIcon,
+  DownloadIcon,
   ExpandIcon,
   MonitorIcon,
   ResetIcon,
@@ -22,6 +23,7 @@ export default function MasterClass() {
   const [current, setCurrent] = useState(0);
   const [checked, setChecked] = useState<Record<number, number[]>>({});
   const [openImage, setOpenImage] = useState<string | null>(null);
+  const [participantName, setParticipantName] = useState("");
 
   const step = steps[current];
   const completedSteps = useMemo(
@@ -61,6 +63,8 @@ export default function MasterClass() {
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.matches("input, textarea, [contenteditable='true']")) return;
       if (openImage) {
         if (event.key === "Escape") setOpenImage(null);
         return;
@@ -93,6 +97,7 @@ export default function MasterClass() {
     setStarted(false);
     setFinished(false);
     setChecked({});
+    setParticipantName("");
   };
 
   return (
@@ -114,7 +119,13 @@ export default function MasterClass() {
       {!started ? (
         <Welcome onStart={() => setStarted(true)} />
       ) : finished ? (
-        <Finish completed={completedSteps} onRestart={restart} onBack={goBack} />
+        <Finish
+          completed={completedSteps}
+          participantName={participantName}
+          onNameChange={setParticipantName}
+          onRestart={restart}
+          onBack={goBack}
+        />
       ) : (
         <div className="workspace">
           <aside className="step-rail" aria-label="Шаги мастер-класса">
@@ -252,7 +263,112 @@ function Welcome({ onStart }: { onStart: () => void }) {
   );
 }
 
-function Finish({ completed, onRestart, onBack }: { completed: number; onRestart: () => void; onBack: () => void }) {
+function Finish({
+  completed,
+  participantName,
+  onNameChange,
+  onRestart,
+  onBack,
+}: {
+  completed: number;
+  participantName: string;
+  onNameChange: (name: string) => void;
+  onRestart: () => void;
+  onBack: () => void;
+}) {
+  const displayName = participantName.trim() || "Имя участника";
+
+  const downloadCard = () => {
+    const name = participantName.trim();
+    if (!name) return;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 1600;
+    canvas.height = 1000;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "#f28c28";
+    context.fillRect(0, 0, 34, canvas.height);
+    context.fillRect(0, 0, canvas.width, 18);
+
+    context.fillStyle = "#f28c28";
+    context.fillRect(112, 92, 92, 92);
+    context.fillStyle = "#ffffff";
+    context.font = "900 42px Arial, sans-serif";
+    context.textAlign = "center";
+    context.fillText("1С", 158, 153);
+
+    context.textAlign = "left";
+    context.fillStyle = "#111318";
+    context.font = "800 28px Arial, sans-serif";
+    context.fillText("ЦИФРОВАЯ ЛОГИСТИКА", 232, 125);
+    context.fillStyle = "#59616d";
+    context.font = "600 20px Arial, sans-serif";
+    context.fillText("Мастер-класс · Великий Новгород", 232, 162);
+
+    context.textAlign = "center";
+    context.fillStyle = "#b45d0b";
+    context.font = "800 22px Arial, sans-serif";
+    context.fillText("ПАМЯТНАЯ КАРТОЧКА УЧАСТНИКА", 800, 282);
+
+    let nameSize = 92;
+    do {
+      context.font = `800 ${nameSize}px Arial, sans-serif`;
+      nameSize -= 2;
+    } while (context.measureText(name).width > 1320 && nameSize > 48);
+    context.fillStyle = "#111318";
+    context.fillText(name, 800, 420);
+
+    context.fillStyle = "#59616d";
+    context.font = "500 30px Arial, sans-serif";
+    context.fillText("выполнил(а) практическое задание", 800, 505);
+    context.fillStyle = "#111318";
+    context.font = "700 42px Arial, sans-serif";
+    context.fillText("«Управление перевозкой в 1С:TMS»", 800, 585);
+
+    context.strokeStyle = "#c8cdd4";
+    context.lineWidth = 3;
+    context.beginPath();
+    context.moveTo(210, 665);
+    context.lineTo(1390, 665);
+    context.stroke();
+
+    context.fillStyle = "#f28c28";
+    context.beginPath();
+    context.arc(800, 738, 38, 0, Math.PI * 2);
+    context.fill();
+    context.strokeStyle = "#ffffff";
+    context.lineWidth = 8;
+    context.beginPath();
+    context.moveTo(781, 739);
+    context.lineTo(796, 754);
+    context.lineTo(823, 722);
+    context.stroke();
+
+    context.fillStyle = "#111318";
+    context.font = "700 24px Arial, sans-serif";
+    context.fillText("ЧВТ · Профессионалы", 800, 835);
+    context.fillStyle = "#68717d";
+    context.font = "500 18px Arial, sans-serif";
+    context.fillText("Памятная карточка · не является официальным сертификатом", 800, 925);
+
+    const safeName = name.replace(/[^a-zA-Zа-яА-ЯёЁ0-9]+/g, "-").replace(/^-|-$/g, "");
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.download = `master-class-${safeName || "participant"}.png`;
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }, "image/png");
+  };
+
   return (
     <section className="finish">
       <div className="finish-mark"><CheckIcon /></div>
@@ -265,6 +381,33 @@ function Finish({ completed, onRestart, onBack }: { completed: number; onRestart
         <div><span>03</span><strong>Точки маршрута</strong><p>Адреса, вес, объём и время</p></div>
       </div>
       <p className="completion-count">Чек-листы: <strong>{completed} из {steps.length}</strong></p>
+      <section className="memory-card-section">
+        <div className="memory-card-form">
+          <span className="section-kicker">Памятный результат</span>
+          <h2>Ваша именная карточка</h2>
+          <p>Введите имя участника — карточку можно показать на телефоне или скачать как PNG.</p>
+          <label htmlFor="participant-name">Имя и фамилия</label>
+          <input
+            id="participant-name"
+            value={participantName}
+            onChange={(event) => onNameChange(event.target.value.slice(0, 60))}
+            placeholder="Например, Иван Петров"
+            autoComplete="name"
+          />
+          <button className="button primary download-button" disabled={!participantName.trim()} onClick={downloadCard}>
+            <DownloadIcon /> Скачать PNG
+          </button>
+          <small>Не является официальным сертификатом.</small>
+        </div>
+        <div className="memory-card-preview" aria-label="Предпросмотр памятной карточки">
+          <div className="memory-brand"><span>1С</span><strong>Цифровая логистика</strong></div>
+          <p>Памятная карточка участника</p>
+          <h3>{displayName}</h3>
+          <span>выполнил(а) практическое задание</span>
+          <strong>«Управление перевозкой в 1С:TMS»</strong>
+          <footer><CheckIcon /> ЧВТ · Профессионалы</footer>
+        </div>
+      </section>
       <QrCard />
       <div className="finish-actions">
         <button className="button secondary" onClick={onBack}><ArrowIcon direction="left" /> Вернуться к шагу 6</button>
