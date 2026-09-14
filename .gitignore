@@ -1,0 +1,15 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js build output
+.next/
+out/
+
+# local tooling
+*.tsbuildinfo
+.DS_Store
+
+# environment files
+.env*
+!.env.example
