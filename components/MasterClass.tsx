@@ -252,7 +252,7 @@ function Welcome({ onStart }: { onStart: () => void }) {
           <div className="route-label route-label-middle"><small>Маршрут</small><strong>4 точки</strong></div>
           <div className="route-label route-label-bottom"><small>Финиш</small><strong>Документ готов</strong></div>
           <svg className="route-canvas" viewBox="0 0 500 600" fill="none">
-            <path className="route-path" d="M112 58C386 75 410 191 233 242C47 296 67 437 354 464C315 486 232 521 155 542" stroke="currentColor" strokeWidth="3" strokeDasharray="8 11" />
+            <path className="route-path" d="M112 34C386 58 410 191 233 242C47 296 67 437 354 464C439 472 455 523 407 571C442 590 443 548 409 550C454 520 438 484 354 452C68 425 48 302 233 254C409 203 385 70 112 46C82 45 82 20 112 34Z" stroke="currentColor" strokeWidth="3" strokeDasharray="8 11" />
             <g className="route-truck">
               <rect x="-25" y="-15" width="34" height="23" rx="4" fill="#f28c28" />
               <path d="M9-10h12l9 10v8H9z" fill="#151820" />
@@ -260,22 +260,10 @@ function Welcome({ onStart }: { onStart: () => void }) {
               <rect x="-20" y="-10" width="16" height="3" rx="1.5" fill="#fff" opacity=".55" />
               <circle cx="-14" cy="10" r="5" fill="#151820" stroke="#fff" strokeWidth="2" />
               <circle cx="20" cy="10" r="5" fill="#151820" stroke="#fff" strokeWidth="2" />
-              <animateMotion dur="9s" repeatCount="indefinite" rotate="auto" path="M112 58C386 75 410 191 233 242C47 296 67 437 354 464C315 486 232 521 155 542" />
-            </g>
-            <g className="tunnel-portal tunnel-start" transform="translate(112 58) rotate(4)">
-              <path className="tunnel-shell" d="M-42 27V4a42 42 0 0 1 84 0v23z" />
-              <path className="tunnel-opening" d="M-27 27V5a27 27 0 0 1 54 0v22z" />
-              <path className="tunnel-rim" d="M-42 27h84" />
-              <text x="0" y="-14" textAnchor="middle">ТОННЕЛЬ</text>
-            </g>
-            <g className="tunnel-portal tunnel-finish" transform="translate(155 542) rotate(-4)">
-              <path className="tunnel-shell" d="M-42 27V4a42 42 0 0 1 84 0v23z" />
-              <path className="tunnel-opening" d="M-27 27V5a27 27 0 0 1 54 0v22z" />
-              <path className="tunnel-rim" d="M-42 27h84" />
-              <text x="0" y="-14" textAnchor="middle">ТОННЕЛЬ</text>
+              <animateMotion dur="18s" repeatCount="indefinite" rotate="auto" path="M112 34C386 58 410 191 233 242C47 296 67 437 354 464C439 472 455 523 407 571C442 590 443 548 409 550C454 520 438 484 354 452C68 425 48 302 233 254C409 203 385 70 112 46C82 45 82 20 112 34Z" />
             </g>
           </svg>
-          <span className="route-dot dot-2" />
+          <span className="route-dot dot-1" /><span className="route-dot dot-2" /><span className="route-dot dot-3" />
           <div className="cargo-stack">
             <span /><span /><span />
             <small>Груз в пути</small>
