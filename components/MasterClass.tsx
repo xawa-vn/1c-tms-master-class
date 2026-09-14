@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { steps } from "@/data/steps";
+import qrCode from "@/public/qr-master-class.png";
 import {
   ArrowIcon,
   CheckIcon,
@@ -227,9 +228,12 @@ function Welcome({ onStart }: { onStart: () => void }) {
           <span><MonitorIcon /><strong>6 шагов</strong><small>в 1С:TMS</small></span>
           <span><CheckIcon /><strong>1 результат</strong><small>маршрутный лист</small></span>
         </div>
-        <button className="button primary large" onClick={onStart}>
-          Начать мастер-класс<ArrowIcon />
-        </button>
+        <div className="welcome-actions">
+          <button className="button primary large" onClick={onStart}>
+            Начать мастер-класс<ArrowIcon />
+          </button>
+          <QrCard />
+        </div>
       </div>
       <div className="welcome-visual" aria-hidden="true">
         <div className="route-map">
@@ -261,10 +265,24 @@ function Finish({ completed, onRestart, onBack }: { completed: number; onRestart
         <div><span>03</span><strong>Точки маршрута</strong><p>Адреса, вес, объём и время</p></div>
       </div>
       <p className="completion-count">Чек-листы: <strong>{completed} из {steps.length}</strong></p>
+      <QrCard />
       <div className="finish-actions">
         <button className="button secondary" onClick={onBack}><ArrowIcon direction="left" /> Вернуться к шагу 6</button>
         <button className="button primary" onClick={onRestart}><ResetIcon /> Пройти ещё раз</button>
       </div>
     </section>
+  );
+}
+
+function QrCard() {
+  return (
+    <div className="qr-card">
+      <Image src={qrCode} alt="QR-код для открытия мастер-класса на телефоне" width={112} height={112} />
+      <div>
+        <strong>Открыть на телефоне</strong>
+        <span>Наведите камеру на QR-код</span>
+        <small>xawa-vn.github.io/1c-tms-master-class</small>
+      </div>
+    </div>
   );
 }
