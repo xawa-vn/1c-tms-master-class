@@ -251,10 +251,23 @@ function Welcome({ onStart }: { onStart: () => void }) {
           <div className="route-label route-label-top"><small>Старт</small><strong>Новый рейс</strong></div>
           <div className="route-label route-label-middle"><small>Маршрут</small><strong>4 точки</strong></div>
           <div className="route-label route-label-bottom"><small>Финиш</small><strong>Документ готов</strong></div>
-          <svg viewBox="0 0 500 600" fill="none">
-            <path d="M112 34C386 58 410 191 233 242C47 296 67 437 354 464C439 472 455 523 407 571" stroke="currentColor" strokeWidth="2" strokeDasharray="7 10" />
+          <svg className="route-canvas" viewBox="0 0 500 600" fill="none">
+            <path className="route-path" d="M112 34C386 58 410 191 233 242C47 296 67 437 354 464C439 472 455 523 407 571" stroke="currentColor" strokeWidth="3" strokeDasharray="8 11" />
+            <g className="route-truck">
+              <rect x="-25" y="-15" width="34" height="23" rx="4" fill="#f28c28" />
+              <path d="M9-10h12l9 10v8H9z" fill="#151820" />
+              <path d="M14-6h6l5 6H14z" fill="#fff" opacity=".9" />
+              <rect x="-20" y="-10" width="16" height="3" rx="1.5" fill="#fff" opacity=".55" />
+              <circle cx="-14" cy="10" r="5" fill="#151820" stroke="#fff" strokeWidth="2" />
+              <circle cx="20" cy="10" r="5" fill="#151820" stroke="#fff" strokeWidth="2" />
+              <animateMotion dur="9s" repeatCount="indefinite" rotate="auto" path="M112 34C386 58 410 191 233 242C47 296 67 437 354 464C439 472 455 523 407 571" />
+            </g>
           </svg>
           <span className="route-dot dot-1" /><span className="route-dot dot-2" /><span className="route-dot dot-3" />
+          <div className="cargo-stack">
+            <span /><span /><span />
+            <small>Груз в пути</small>
+          </div>
           <div className="document-preview"><span>1С:TMS</span><div className="paper-lines" /><strong>Маршрутный лист</strong><CheckIcon /></div>
         </div>
       </div>
